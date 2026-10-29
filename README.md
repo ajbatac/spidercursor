@@ -25,7 +25,7 @@ _Add to any page in 1 line. Just for fun._
 ---
 
 _"I just wanted cursor effects. I ended up learning inverse kinematics."_  
-— Every developer who has touched this repo 🕷️
+- Every developer who has touched this repo 🕷️
 
 </div>
 
@@ -49,7 +49,7 @@ Drop it on your:
 
 ## 🚀 Instant 30-Second Setup
 
-### Option A — The One Liner (You're Welcome)
+### Option A - The One Liner (You're Welcome)
 
 ```html
 <!-- 1. Include Three.js & SpiderCursor -->
@@ -73,7 +73,7 @@ That's it. You're done. The spider is now on your website. Close the laptop. It'
 
 ---
 
-### Option B — NPM / ES Modules (for the `package.json` enjoyers)
+### Option B - NPM / ES Modules (for the `package.json` enjoyers)
 
 ```bash
 # Install with npm
@@ -110,7 +110,7 @@ document.getElementById('scare-btn')?.addEventListener('click', () => {
 
 ---
 
-### Option C — React / Next.js (Modern Framework Edition™)
+### Option C - React / Next.js (Modern Framework Edition™)
 
 ```tsx
 import { useEffect, useRef } from 'react';
@@ -142,12 +142,12 @@ Render `<SpiderBackground />` once at the root level (e.g. in `_app.tsx` or root
 
 ---
 
-### Option D — Vue / Svelte / Angular / Vanilla JS
+### Option D - Vue / Svelte / Angular / Vanilla JS
 
 SpiderCursor is **100% framework-agnostic**. As long as you have a browser and a `window`, you have a spider.
 
 ```js
-// Vue 3 — composable
+// Vue 3 - composable
 import { onMounted, onUnmounted } from 'vue';
 import { SpiderCursor } from 'spider-cursor';
 
@@ -159,7 +159,7 @@ export function useSpider(config = {}) {
 ```
 
 ```js
-// Svelte — lifecycle
+// Svelte - lifecycle
 import { onMount, onDestroy } from 'svelte';
 import { SpiderCursor } from 'spider-cursor';
 
@@ -170,14 +170,14 @@ onDestroy(() => spider?.destroy());
 
 ---
 
-## ✨ Features
+## Features
 
 ### 🦴 Core Architecture
 
 | Feature | Details |
 |---|---|
 | **100% Free & Open Source** | No accounts, no paywalls, no VC-funded "freemium" tiers. Built purely as a fun open-source web widget. Apache-2.0 licensed. |
-| **Top-Down Perspective** | Realistic dorsal silhouette with tapered leg joints, carapace body shape, and ground drop shadows — like a spider actually walking on glass above your screen. |
+| **Top-Down Perspective** | Realistic dorsal silhouette with tapered leg joints, carapace body shape, and ground drop shadows - like a spider actually walking on glass above your screen. |
 | **Inverse Kinematics** | 8 legs, each driven by real IK math. The spider calculates limb joint angles, step cadence, stride length, and ground contact in real time. Every frame. Because why not. |
 | **Non-Blocking UI** | Clicks pass straight through (`pointer-events: none`) so your site buttons, inputs, and links work completely untouched. Nobody can tell the spider is there. Except for the spider. |
 | **Zero 404 Assets** | Pure procedural geometry. No external image files, no GLTF models, no spritesheet PNGs to 404 at 2 AM in production. |
@@ -227,8 +227,8 @@ The spider has moods. Respect them.
 
 ```ts
 interface SpiderConfig {
-  size: number;                                    // Scale multiplier (default: 1.0, range: 0.5–2.5)
-  speed: number;                                   // Movement & gait speed (default: 1.0, range: 0.2–3.0)
+  size: number;                                    // Scale multiplier (default: 1.0, range: 0.5-2.5)
+  speed: number;                                   // Movement & gait speed (default: 1.0, range: 0.2-3.0)
   theme: 'auto' | 'light' | 'dark' | 'custom';   // Color theme mode (default: 'auto')
   colors?: Partial<SpiderColorPalette>;            // Custom hex palette when theme is 'custom'
   mode: 'hunt' | 'flee' | 'wander' | 'perch';    // Behavior mode (default: 'hunt')
@@ -259,7 +259,7 @@ interface SpiderConfig {
 | `pointerEventsNone` | `boolean` | `true` | Applies CSS `pointer-events: none` so clicks pass straight through to page. |
 | `sound` | `boolean` | `false` | Procedural Web Audio chitin footstep clicks. Zero audio files needed. |
 | `pauseWhenHidden` | `boolean` | `true` | Pauses render loop when user switches browser tabs to save battery. |
-| `swarmCount` | `number` | `0` | Spawns N baby spiderlings that swarm around the main spider. Range: 0–6. |
+| `swarmCount` | `number` | `0` | Spawns N baby spiderlings that swarm around the main spider. Range: 0-6. |
 | `initialPosition` | `[number, number]` | `undefined` | Starting pixel position `[x, y]` in viewport coordinates. |
 | `container` | `HTMLElement` | `document.body` | DOM element to append the canvas to. |
 | `zIndex` | `number` | `9999` | CSS `z-index` of the canvas overlay. |
@@ -310,10 +310,10 @@ interface SpiderInstance {
   updateConfig(newConfig: Partial<SpiderConfig>): void;
 
   // Startle the spider, causing a brief recoil burst
-  // force: 0.5–2.0 multiplier for how far it flies back (default: 1.0)
+  // force: 0.5-2.0 multiplier for how far it flies back (default: 1.0)
   scare(force?: number): void;
 
-  // Drop virtual "bait" at pixel coords — the spider rushes to eat it
+  // Drop virtual "bait" at pixel coords - the spider rushes to eat it
   feed(x: number, y: number): void;
 
   // Pounce immediately to pixel coords (ignores normal movement speed)
@@ -364,11 +364,11 @@ window.addEventListener('beforeunload', () => spider.destroy());
 The live demo includes an **ergonomic collapsible bottom dock** (zero viewport occlusion) with real-time controls:
 
 ### Kinematics & Size Panel
-- **Spider Scale** — Slider from `0.5x` (tiny) to `2.2x` (huge, terrifying)
-- **Crawl Pace** — Slider from `0.3x` (stealthy stalk) to `2.8x` (full scuttle)
-- **Spider Swarm** — Spawn 0–6 baby spiderlings that orbit the main spider
-- **Cobweb Silk** — Toggle the trailing silk dragline `ON / OFF`
-- **Pass-thru** — Toggle `pointer-events: none` to see the spider consume your clicks (or not)
+- **Spider Scale** - Slider from `0.5x` (tiny) to `2.2x` (huge, terrifying)
+- **Crawl Pace** - Slider from `0.3x` (stealthy stalk) to `2.8x` (full scuttle)
+- **Spider Swarm** - Spawn 0-6 baby spiderlings that orbit the main spider
+- **Cobweb Silk** - Toggle the trailing silk dragline `ON / OFF`
+- **Pass-thru** - Toggle `pointer-events: none` to see the spider consume your clicks (or not)
 
 ### Theme & Colors Panel
 - Switch between **Light Mode**, **Dark Mode**, and **Auto (System)**
@@ -380,8 +380,8 @@ The live demo includes an **ergonomic collapsible bottom dock** (zero viewport o
 ### Quick Actions (always visible)
 | Button | Action |
 |---|---|
-| ⚡ **Startle** | Triggers `spider.scare(1.4)` — the spider recoils dramatically |
-| 🎃 **Pumpkin Bait** | Drops bait at a random position — the spider rushes over |
+| ⚡ **Startle** | Triggers `spider.scare(1.4)` - the spider recoils dramatically |
+| 🎃 **Pumpkin Bait** | Drops bait at a random position - the spider rushes over |
 | ✛ **Recenter** | Teleports the hunt target to the viewport center |
 | 🔊 **Chitin Audio** | Toggles procedural Web Audio footstep sounds |
 
@@ -391,9 +391,9 @@ The live demo includes an **ergonomic collapsible bottom dock** (zero viewport o
 
 The demo site includes a **"Try Clicking and Typing While It Crawls"** testbed proving that the spider is purely cosmetic and blocks absolutely nothing:
 
-- **Input & Typing Test** — Type into an input, click a button, watch the counter increment while the spider crawls over it.
-- **Trick or Treat Selector** — Click radio cards to toggle between `Prank Mode (Jumpscare Crawl)` and `Gentle Spider Pet Mode`. Clickable under the spider. Always.
-- **Highlight & Select Text** — Drag to select a text blockquote while the spider scuttles across it. Text selection works perfectly.
+- **Input & Typing Test** - Type into an input, click a button, watch the counter increment while the spider crawls over it.
+- **Trick or Treat Selector** - Click radio cards to toggle between `Prank Mode (Jumpscare Crawl)` and `Gentle Spider Pet Mode`. Clickable under the spider. Always.
+- **Highlight & Select Text** - Drag to select a text blockquote while the spider scuttles across it. Text selection works perfectly.
 
 > "Notice how the spider walks smoothly over buttons, text, and inputs without blocking your clicks. 100% free fun for your site."
 
@@ -416,9 +416,9 @@ The demo site includes a **"Try Clicking and Typing While It Crawls"** testbed p
 
 | Layer | Technology |
 |---|---|
-| **3D Engine** | [Three.js](https://threejs.org) r128 — WebGL scene, camera, renderer |
-| **Animation** | Procedural IK solver — no animation clips, pure math every frame |
-| **Audio** | Web Audio API — procedural chitin click synthesis, zero audio files |
+| **3D Engine** | [Three.js](https://threejs.org) r128 - WebGL scene, camera, renderer |
+| **Animation** | Procedural IK solver - no animation clips, pure math every frame |
+| **Audio** | Web Audio API - procedural chitin click synthesis, zero audio files |
 | **Demo Framework** | React 19 + Vite 8 |
 | **Language** | TypeScript 7 |
 | **Styling** | Tailwind CSS v4 |
@@ -497,10 +497,10 @@ spidercursor/
 
 The demo site ships with an **over-the-top Halloween Cemetery Parallax Environment** including:
 
-- 🪦 **Cemetery Parallax** — Layered gravestones drifting at different scroll speeds
-- 🕸️ **SVG Cobwebs** — Corner cobweb overlays
-- 🎃 **Animated Jack-o'-Lantern** — Click the pumpkin in the hero to drop bait and summon the spider
-- 🦇 **Dark ambient atmosphere** — Full `prefers-color-scheme: dark`-aware Halloween palette
+- 🪦 **Cemetery Parallax** - Layered gravestones drifting at different scroll speeds
+- 🕸️ **SVG Cobwebs** - Corner cobweb overlays
+- 🎃 **Animated Jack-o'-Lantern** - Click the pumpkin in the hero to drop bait and summon the spider
+- 🦇 **Dark ambient atmosphere** - Full `prefers-color-scheme: dark`-aware Halloween palette
 
 > This README was written at 1:15 AM on the night before Halloween, 2026. The commit is going out tonight. The spider is already on your screen.
 
