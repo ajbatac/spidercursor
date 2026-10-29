@@ -4,12 +4,21 @@
 
 ## Overview
 - **Name**: SpiderCursor
+- **Version**: v0.1.1 (Updated Oct 29, 2026)
 - **Website**: https://spidercursor.techhive.net/
+- **Changelog**: https://spidercursor.techhive.net/changelog
+- **RSS Feed**: https://spidercursor.techhive.net/changelog/rss
 - **Category**: Open Source Web Graphics / Procedural Animation Library
 - **License**: Apache-2.0
 - **Author**: AJ Batac
 - **Repository**: https://github.com/ajbatac/spidercursor
 - **Key Characteristics**: Zero external 3D models (0 GLTF/OBJ), zero image spritesheets, pure mathematical procedural geometry, procedural Web Audio API step clicks, click-through non-blocking UI (`pointer-events: none`).
+
+## Recent Updates (v0.1.1 - Oct 29, 2026)
+- Interactive 404 experience with real-time spider reactions (`/404`)
+- Complete search engine and answer engine optimization (JSON-LD structured schemas)
+- Public changelog and RSS feed subscription (`/changelog`, `/changelog/rss`)
+- High-resolution multi-size favicon suite and web manifest
 
 ## Quick Installation
 

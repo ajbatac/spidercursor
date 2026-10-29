@@ -20,6 +20,7 @@ _Add to any page in 1 line. Just for fun._
 [![No Signups](https://img.shields.io/badge/Signups-NONE-blueviolet?style=for-the-badge)](https://github.com/ajbatac/spidercursor)
 [![Powered By](https://img.shields.io/badge/Powered%20By-Three.js%20%26%20IK%20Math-f59e0b?style=for-the-badge)](https://threejs.org)
 [![Framework](https://img.shields.io/badge/Framework-Agnostic-64748b?style=for-the-badge)](https://github.com/ajbatac/spidercursor)
+[![Version](https://img.shields.io/badge/Version-v0.1.1-amber?style=for-the-badge)](https://spidercursor.techhive.net/changelog)
 [![Halloween](https://img.shields.io/badge/🎃-Halloween%20Ready-orange?style=for-the-badge)](https://github.com/ajbatac/spidercursor)
 
 ---
@@ -44,6 +45,14 @@ Drop it on your:
 - 🎃 Halloween prank page (obviously)
 - 📝 Blog (watch readers forget what they were reading)
 - 💼 Company site (legal has been informed and is still processing)
+
+---
+
+## 📌 Release Summary (v0.1.1 - Oct 29, 2026)
+
+- **Interactive 404 Experience**: Dedicated spider-infested error route (`/404`) with interactive bait tossing and startle reactions.
+- **Enhanced Web Discovery**: Full search and AI answer engine optimizations (rich JSON-LD schemas, sitemap, robots, and llms.txt).
+- **Public Changelog & RSS Feed**: Live changelog available at `/changelog` with an automated RSS feed at `/changelog/rss`.
 
 ---
 

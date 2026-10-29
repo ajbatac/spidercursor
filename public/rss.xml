@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SpiderCursor Changelog</title>
+    <link>https://spidercursor.techhive.net/changelog</link>
+    <description>Latest product updates, features, and improvements for SpiderCursor.</description>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 29 Oct 2026 10:24:00 GMT</lastBuildDate>
+    <atom:link href="https://spidercursor.techhive.net/changelog/rss" rel="self" type="application/rss+xml"/>
+    
+    <item>
+      <title>SpiderCursor v0.1.1 - Interactive 404 Experience, Search Discovery, and RSS Feed</title>
+      <link>https://spidercursor.techhive.net/changelog#v0.1.1</link>
+      <guid isPermaLink="true">https://spidercursor.techhive.net/changelog#v0.1.1</guid>
+      <pubDate>Thu, 29 Oct 2026 10:24:00 GMT</pubDate>
+      <description><![CDATA[<ul>
+<li>Interactive 404 Experience: Added an atmospheric, playful error page where the spider reacts to pumpkin bait and startle gestures when you wander off path.</li>
+<li>Improved Search &amp; AI Assistant Discovery: Made SpiderCursor easier to discover on major search engines and modern AI assistants with rich answer snippets and metadata.</li>
+<li>Public Changelog &amp; RSS Feed: Introduced this visual update log along with an automated RSS feed so users can subscribe to new releases.</li>
+<li>High-Resolution Iconography &amp; PWA Support: Added crisp vector and mobile icons for bookmarking and mobile home screen installation.</li>
+</ul>]]></description>
+    </item>
+
+    <item>
+      <title>SpiderCursor v0.1.0 - Initial Release of Procedural 8-Legged Web Arachnid</title>
+      <link>https://spidercursor.techhive.net/changelog#v0.1.0</link>
+      <guid isPermaLink="true">https://spidercursor.techhive.net/changelog#v0.1.0</guid>
+      <pubDate>Thu, 29 Oct 2026 01:20:00 GMT</pubDate>
+      <description><![CDATA[<ul>
+<li>Initial Public Release: The debut of SpiderCursor, a realistic top-down 8-legged procedural spider that stalks your cursor on any web page.</li>
+<li>4 Distinct Arachnid Behaviors: Added Hunt, Flee, Free Roam, and Perch modes with live switching.</li>
+<li>Non-Blocking Click-Through Technology: Engineered the overlay so every button, link, and input on your website remains 100% interactive.</li>
+<li>Procedural Chitin Footsteps: Zero audio files to download; footstep clicks are synthesized mathematically directly in the browser.</li>
+<li>Playground Dock &amp; Spooky Species: Real-time controls to change scale, speed, colors, and spooky presets like Black Widow and Pumpkin Spider.</li>
+</ul>]]></description>
+    </item>
+  </channel>
+</rss>
+

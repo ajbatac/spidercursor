@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Download, Sun, Moon, BookOpen, Layers } from 'lucide-react';
+import { Download, Sun, Moon, BookOpen, Layers, ArrowLeft } from 'lucide-react';
 import { SpiderThemeMode } from '../spider-cursor/types';
 
 interface HeaderProps {
@@ -14,6 +14,10 @@ interface HeaderProps {
   onScrollToDocs: () => void;
   onScrollToTestbed: () => void;
   isDarkActive: boolean;
+  onNavigateHome?: () => void;
+  onNavigateChangelog?: () => void;
+  isNotFound?: boolean;
+  isChangelog?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -23,13 +27,23 @@ export const Header: React.FC<HeaderProps> = ({
   onScrollToDocs,
   onScrollToTestbed,
   isDarkActive,
+  onNavigateHome,
+  onNavigateChangelog,
+  isNotFound = false,
+  isChangelog = false,
 }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-white/85 dark:bg-slate-950/85 border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Brand */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-sm font-black text-xl select-none">
+        <div
+          onClick={onNavigateHome}
+          className="flex items-center gap-3 cursor-pointer group"
+          role="button"
+          tabIndex={0}
+          title="SpiderCursor Home"
+        >
+          <div className="w-9 h-9 rounded-xl bg-slate-950 dark:bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-sm font-black text-xl select-none group-hover:scale-105 transition-transform">
             🕷
           </div>
           <div>
@@ -37,9 +51,17 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="font-extrabold tracking-tight text-slate-950 dark:text-white text-lg">
                 SpiderCursor
               </span>
-              <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                v1.0.0
-              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onNavigateChangelog?.();
+                }}
+                className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/20 transition-colors cursor-pointer"
+                title="View v0.1.1 Changelog"
+              >
+                v0.1.1
+              </button>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
               Top-Down Procedural IK Arachnid for the Web
@@ -49,21 +71,43 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Navigation & Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <button
-            onClick={onScrollToTestbed}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>Interactive Testbed</span>
-          </button>
+          {isNotFound || isChangelog ? (
+            <button
+              onClick={onNavigateHome}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to home</span>
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={onScrollToTestbed}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Interactive Testbed</span>
+              </button>
 
-          <button
-            onClick={onScrollToDocs}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Docs & API</span>
-          </button>
+              <button
+                onClick={onScrollToDocs}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Docs & API</span>
+              </button>
+            </>
+          )}
+
+          {/* Changelog link */}
+          {!isChangelog && (
+            <button
+              onClick={onNavigateChangelog}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+            >
+              <span>Changelog</span>
+            </button>
+          )}
 
           {/* Direct 1-Click Light / Dark Switcher */}
           <button

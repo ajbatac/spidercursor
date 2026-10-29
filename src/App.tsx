@@ -13,6 +13,8 @@ import { InteractiveTestBed } from './components/InteractiveTestBed';
 import { Documentation } from './components/Documentation';
 import { DownloadModal } from './components/DownloadModal';
 import { CemeteryParallax } from './components/CemeteryParallax';
+import { NotFound } from './components/NotFound';
+import { Changelog } from './pages/Changelog';
 
 export default function App() {
   const spiderRef = useRef<SpiderCursor | null>(null);
@@ -25,6 +27,13 @@ export default function App() {
     webSilk: true,
   });
 
+  const [currentPath, setCurrentPath] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname || '/';
+    }
+    return '/';
+  });
+
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     if (typeof window !== 'undefined' && window.matchMedia) {
@@ -32,6 +41,23 @@ export default function App() {
     }
     return false;
   });
+
+  // Track popstate for client-side routing
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname || '/');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigate = (path: string) => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', path);
+      setCurrentPath(path);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // Track system theme changes for root HTML class
   useEffect(() => {
@@ -100,12 +126,30 @@ export default function App() {
   };
 
   const scrollToDocs = () => {
+    if (currentPath !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById('docs')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
     document.getElementById('docs')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const scrollToTestbed = () => {
+    if (currentPath !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById('testbed')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
     document.getElementById('testbed')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const isChangelog = currentPath === '/changelog' || currentPath === '/changelog/';
+  const isHome = currentPath === '/' || currentPath === '';
+  const isNotFound = !isHome && !isChangelog;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors selection:bg-amber-500 selection:text-slate-950 dark:selection:bg-amber-400 dark:selection:text-slate-950">
@@ -120,20 +164,38 @@ export default function App() {
         onScrollToDocs={scrollToDocs}
         onScrollToTestbed={scrollToTestbed}
         isDarkActive={activeDark}
+        onNavigateHome={() => navigate('/')}
+        onNavigateChangelog={() => navigate('/changelog')}
+        isNotFound={isNotFound}
+        isChangelog={isChangelog}
       />
 
       {/* Main Page Sections */}
-      <main className="relative pb-36">
-        <Hero
-          onOpenDownload={() => setIsDownloadOpen(true)}
-          onScrollToDocs={scrollToDocs}
-          onScare={handleScare}
-          onDropBait={handleDropBait}
-        />
+      <main className="relative pb-36 pt-16">
+        {isChangelog ? (
+          <Changelog onBackToHome={() => navigate('/')} />
+        ) : isNotFound ? (
+          <NotFound
+            onBackToHome={() => navigate('/')}
+            onScareSpider={handleScare}
+            onDropBait={handleDropBait}
+            onSwarm={() => handleUpdateConfig({ swarmCount: 6, speed: 2.2 })}
+            currentPath={currentPath}
+          />
+        ) : (
+          <>
+            <Hero
+              onOpenDownload={() => setIsDownloadOpen(true)}
+              onScrollToDocs={scrollToDocs}
+              onScare={handleScare}
+              onDropBait={handleDropBait}
+            />
 
-        <InteractiveTestBed />
+            <InteractiveTestBed />
 
-        <Documentation />
+            <Documentation />
+          </>
+        )}
 
         {/* Footer */}
         <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs text-slate-500 dark:text-slate-400">
@@ -141,12 +203,46 @@ export default function App() {
             <div className="flex items-center gap-2">
               <span className="font-bold text-slate-800 dark:text-slate-200">SpiderCursor</span>
               <span>•</span>
+              <a
+                href="/changelog"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/changelog');
+                }}
+                className="font-mono font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
+                title="View v0.1.1 Changelog"
+              >
+                v0.1.1
+              </a>
+              <span>•</span>
               <span>High-performance Three.js procedural animation</span>
             </div>
             <div className="flex items-center gap-4">
               <span>Zero external assets</span>
               <span>•</span>
               <span>Framework agnostic</span>
+              <span>•</span>
+              <a
+                href="/changelog"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/changelog');
+                }}
+                className="hover:text-amber-500 transition-colors underline decoration-amber-500/40"
+              >
+                Changelog
+              </a>
+              <span>•</span>
+              <a
+                href="/404"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/404');
+                }}
+                className="hover:text-amber-500 transition-colors underline decoration-amber-500/40"
+              >
+                404 Spider Den 🕸️
+              </a>
               <span>•</span>
               <span>Apache-2.0 License</span>
             </div>
