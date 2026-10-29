@@ -3,19 +3,216 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO Meta Tags -->
     <title>SpiderCursor - Lightweight Three.js Procedural Spider</title>
-    <meta name="description" content="Framework-agnostic, embeddable Three.js procedural spider with realistic inverse kinematics, cursor tracking, light/dark mode adaptation, and customizable configurations." />
-    <meta property="og:title" content="SpiderCursor - Lightweight Three.js Procedural Spider" />
-    <meta property="og:description" content="Framework-agnostic, embeddable Three.js procedural spider with realistic inverse kinematics, cursor tracking, light/dark mode adaptation, and customizable configurations." />
+    <meta name="title" content="SpiderCursor - Lightweight Three.js Procedural Spider" />
+    <meta name="description" content="Embeddable Three.js procedural spider with realistic inverse kinematics, cursor tracking, light/dark mode adaptation, and customizable configurations." />
+    <meta name="keywords" content="spider cursor, threejs spider, inverse kinematics javascript, procedural animation, procedural spider, webgl cursor effect, halloween web widget, interactive cursor, three.js animation" />
+    <meta name="author" content="AJ Batac" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#0a0a0c" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="canonical" href="https://spidercursor.techhive.net/" />
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" sizes="32x32" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="128x128" href="/favicon-128x128.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content="SpiderCursor" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://spidercursor.techhive.net/" />
+    <meta property="og:title" content="SpiderCursor - Lightweight Three.js Procedural Spider" />
+    <meta property="og:description" content="Embeddable Three.js procedural spider with realistic inverse kinematics, cursor tracking, light/dark mode adaptation, and customizable configurations." />
+    <meta property="og:image" content="https://spidercursor.techhive.net/og.jpg" />
+    <meta property="og:image:secure_url" content="https://spidercursor.techhive.net/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="3196" />
+    <meta property="og:image:height" content="1790" />
+    <meta property="og:image:alt" content="SpiderCursor - Lightweight Three.js Procedural Spider" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://spidercursor.techhive.net/" />
+    <meta name="twitter:site" content="@spidercursor" />
+    <meta name="twitter:creator" content="@ajbatac" />
+    <meta name="twitter:title" content="SpiderCursor - Lightweight Three.js Procedural Spider" />
+    <meta name="twitter:description" content="Embeddable Three.js procedural spider with realistic inverse kinematics, cursor tracking, light/dark mode adaptation, and customizable configurations." />
+    <meta name="twitter:image" content="https://spidercursor.techhive.net/og.jpg" />
+    <meta name="twitter:image:alt" content="SpiderCursor - Lightweight Three.js Procedural Spider" />
+
+    <!-- Structured Data (JSON-LD) for SEO, GEO, and AEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://spidercursor.techhive.net/#website",
+          "url": "https://spidercursor.techhive.net/",
+          "name": "SpiderCursor",
+          "description": "Lightweight, framework-agnostic Three.js procedural spider with realistic inverse kinematics, cursor tracking, and zero external assets.",
+          "inLanguage": "en-US"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://spidercursor.techhive.net/#software",
+          "name": "SpiderCursor",
+          "operatingSystem": "Any (Modern Web Browsers)",
+          "applicationCategory": "DeveloperApplication",
+          "applicationSubCategory": "Web Animation Widget",
+          "softwareVersion": "1.0.0",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "license": "https://opensource.org/licenses/Apache-2.0",
+          "author": {
+            "@type": "Person",
+            "name": "AJ Batac",
+            "url": "https://github.com/ajbatac"
+          },
+          "description": "Lightweight, framework-agnostic, procedural 8-legged spider cursor effect in Three.js with realistic inverse kinematics, real-time drop shadows, zero external 3D assets, and non-blocking click-through UI.",
+          "featureList": [
+            "Realistic inverse kinematics procedural leg motion",
+            "Zero external 3D models or image spritesheets",
+            "Non-blocking click-through overlay with pointer-events: none",
+            "4 behavior modes: hunt, flee, wander, and perch",
+            "Dynamic theme adaptation with light and dark mode support",
+            "Procedural Web Audio API chitin footstep sounds",
+            "Tab visibility auto-pause for GPU and battery savings"
+          ],
+          "downloadUrl": "https://github.com/ajbatac/spidercursor",
+          "codeRepository": "https://github.com/ajbatac/spidercursor"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://spidercursor.techhive.net/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is SpiderCursor?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "SpiderCursor is a lightweight, framework-agnostic procedural 8-legged spider that stalks your cursor across any web page. Rendered in Three.js with real-time inverse kinematics (IK) leg physics, ground drop shadows, and trailing silk, it requires zero external 3D model files or images."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does SpiderCursor block clicks, buttons, or input fields?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. SpiderCursor is rendered on an overlay canvas with CSS pointer-events: none applied by default, allowing clicks, text selection, and form interactions to pass directly through without disruption."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I add SpiderCursor to my website in one line?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Include Three.js and the SpiderCursor UMD bundle via CDN in your HTML head, then initialize it on the body tag with: <body onload=\"SpiderCursor.init()\">."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does SpiderCursor require downloading 3D models or textures?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. All spider anatomy (carapace, abdomen, 8 multi-jointed legs, eyes, silk) is generated mathematically at runtime via Three.js procedural geometry with zero external asset files."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What behavior modes does SpiderCursor support?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "SpiderCursor supports four distinct behavior modes: hunt (smoothly stalks the cursor), flee (scurries away when approached), wander (freely roams the viewport autonomously), and perch (remains motionless until startled)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does SpiderCursor affect battery life or Core Web Vitals?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "SpiderCursor utilizes hardware-accelerated WebGL with an adjustable framerate cap (default 60 FPS) and automatically pauses the render loop when the browser tab is hidden to conserve CPU, GPU, and battery power."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "HowTo",
+          "@id": "https://spidercursor.techhive.net/#howto",
+          "name": "How to Add SpiderCursor to Any Web Page",
+          "description": "Step-by-step instructions to embed a procedural 8-legged spider cursor effect onto your web page in less than 30 seconds.",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Include Three.js and SpiderCursor Scripts",
+              "text": "Add the Three.js r128 CDN script and SpiderCursor UMD bundle to your HTML document."
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Initialize SpiderCursor",
+              "text": "Call SpiderCursor.init() with optional custom configuration parameters on body load or in your frontend framework lifecycle hook."
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
-  <body>
-    <div id="root"></div>
+  <body class="bg-[#0a0a0c] text-white">
+    <div id="root">
+      <!-- Semantic Static Fallback for Search Engines and AI Crawlers (Replaced upon React Mount) -->
+      <header>
+        <h1>SpiderCursor - Lightweight Three.js Procedural Spider Cursor Effect</h1>
+        <p>A realistic, framework-agnostic 8-legged procedural spider that stalks your cursor with inverse kinematics leg physics, real drop shadows, and zero external 3D models.</p>
+      </header>
+      <main>
+        <section>
+          <h2>Key Features</h2>
+          <ul>
+            <li><strong>Realistic Inverse Kinematics</strong>: 8 legs dynamically compute joint angles and footstep cadence in real time.</li>
+            <li><strong>Zero External Assets</strong>: 100% procedural geometry and Web Audio synthesis. No 3D model downloads or image sprites.</li>
+            <li><strong>Non-Blocking Click-Through UI</strong>: Uses <code>pointer-events: none</code> so every button, link, and input on your website remains completely interactive.</li>
+            <li><strong>4 Behavioral Modes</strong>: Hunt, Flee, Wander, and Perch.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Instant 1-Line Setup</h2>
+          <pre><code>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/spider-cursor@1.0.0/dist/spider-cursor.umd.js"&gt;&lt;/script&gt;
+&lt;body onload="SpiderCursor.init()"&gt;</code></pre>
+        </section>
+      </main>
+    </div>
+    <noscript>
+      <p style="padding: 1.5rem; text-align: center; color: #f97316;">
+        SpiderCursor requires JavaScript to render the interactive procedural 3D spider effect.
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

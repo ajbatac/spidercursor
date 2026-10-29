@@ -1,0 +1,63 @@
+# SpiderCursor
+
+> Lightweight, framework-agnostic, procedural 8-legged spider cursor effect rendered in Three.js with realistic inverse kinematics, real-time drop shadows, and zero external assets.
+
+## Overview
+- **Name**: SpiderCursor
+- **Website**: https://spidercursor.techhive.net/
+- **Category**: Open Source Web Graphics / Procedural Animation Library
+- **License**: Apache-2.0
+- **Author**: AJ Batac
+- **Repository**: https://github.com/ajbatac/spidercursor
+- **Key Characteristics**: Zero external 3D models (0 GLTF/OBJ), zero image spritesheets, pure mathematical procedural geometry, procedural Web Audio API step clicks, click-through non-blocking UI (`pointer-events: none`).
+
+## Quick Installation
+
+### CDN / HTML One-Liner
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/spider-cursor@1.0.0/dist/spider-cursor.umd.js"></script>
+<body onload="SpiderCursor.init({ theme: 'auto', size: 1.0, speed: 1.2, mode: 'hunt', webSilk: true })">
+```
+
+### NPM / ES Modules
+```bash
+npm install spider-cursor three
+```
+```ts
+import { SpiderCursor } from 'spider-cursor';
+const spider = new SpiderCursor({ theme: 'auto', mode: 'hunt' });
+```
+
+### React / Next.js
+```tsx
+import { useEffect, useRef } from 'react';
+import { SpiderCursor } from 'spider-cursor';
+
+export function SpiderBackground() {
+  const spiderRef = useRef<SpiderCursor | null>(null);
+  useEffect(() => {
+    spiderRef.current = new SpiderCursor({ theme: 'auto', size: 1.0 });
+    return () => spiderRef.current?.destroy();
+  }, []);
+  return null;
+}
+```
+
+## Behavior Modes
+- `hunt`: Smoothly tracks and stalks the user's cursor while maintaining a configurable stop distance.
+- `flee`: Scurries away in panic whenever the cursor gets close.
+- `wander`: Autonomously explores the viewport independently of the cursor.
+- `perch`: Stays dormant until startled by a click or `spider.scare()`.
+
+## Core Configuration Options (`SpiderConfig`)
+- `size`: number (default: 1.0, range: 0.5-2.5) - Scale multiplier for body and leg lengths.
+- `speed`: number (default: 1.0, range: 0.2-3.0) - Movement and gait cadence speed multiplier.
+- `theme`: 'auto' | 'light' | 'dark' | 'custom' - Adapts to OS dark mode or custom hex palette.
+- `mode`: 'hunt' | 'flee' | 'wander' | 'perch' - Active behavioral pattern.
+- `stopDistance`: number (default: 38) - Minimum distance in pixels from cursor when hunting.
+- `webSilk`: boolean (default: true) - Draws trailing silk line from spinnerets.
+- `pointerEventsNone`: boolean (default: true) - Ensures clicks pass through to page elements.
+- `sound`: boolean (default: false) - Procedural chitin footstep audio via Web Audio API.
+- `maxFps`: number (default: 60) - Framerate cap for GPU efficiency.
+- `pauseWhenHidden`: boolean (default: true) - Automatically pauses render loop on tab switch.
