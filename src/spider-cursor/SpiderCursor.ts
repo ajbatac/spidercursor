@@ -448,13 +448,18 @@ export class SpiderCursor implements SpiderInstance {
     if (targetSpeed > 0) {
       const headingDir = new THREE.Vector2(Math.sin(-this.heading), Math.cos(-this.heading));
       const desiredVel = headingDir.multiplyScalar(targetSpeed);
-      this.velocity.lerp(desiredVel, Math.min(1.0, 7.0 * delta));
+      this.velocity.lerp(desiredVel, Math.min(1.0, 7.5 * delta));
     } else {
-      this.velocity.lerp(new THREE.Vector2(0, 0), Math.min(1.0, 8.0 * delta));
+      this.velocity.lerp(new THREE.Vector2(0, 0), Math.min(1.0, 9.0 * delta));
     }
 
-    // Apply movement
-    this.currentPos.addScaledVector(this.velocity, delta);
+    // Apply movement with natural scuttle pulse (legs push the body in rhythmic thrusts)
+    let crawlPulse = 1.0;
+    if (this.velocity.length() > 2.0 && this.spiderModel) {
+      crawlPulse = 1.0 + 0.28 * Math.sin(this.spiderModel.gaitPhase * Math.PI * 2);
+    }
+    const movementStep = this.velocity.clone().multiplyScalar(delta * crawlPulse);
+    this.currentPos.add(movementStep);
 
     // Keep within screen bounds
     this.currentPos.x = Math.max(20, Math.min(window.innerWidth - 20, this.currentPos.x));
@@ -507,7 +512,11 @@ export class SpiderCursor implements SpiderInstance {
         mini.vel.lerp(new THREE.Vector2(0, 0), Math.min(1.0, 10.0 * delta));
       }
 
-      mini.pos.addScaledVector(mini.vel, delta);
+      let miniPulse = 1.0;
+      if (mini.vel.length() > 2.0 && mini.model) {
+        miniPulse = 1.0 + 0.28 * Math.sin(mini.model.gaitPhase * Math.PI * 2);
+      }
+      mini.pos.addScaledVector(mini.vel, delta * miniPulse);
       const miniIsMoving = mini.vel.length() > 2.0;
 
       mini.model.update(

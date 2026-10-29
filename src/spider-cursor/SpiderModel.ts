@@ -24,6 +24,7 @@ export interface LegDef {
   baseAngle: number;
   reach: number;
   hipOffset: THREE.Vector3;
+  neutralOffset: THREE.Vector3;
   femurLen: number;
   tibiaLen: number;
   tarsusLen: number;
@@ -31,6 +32,7 @@ export interface LegDef {
   // Gait state
   isStepping: boolean;
   stepProgress: number;
+  worldFootPos: THREE.Vector3;
   stepStartPos: THREE.Vector3;
   stepTargetPos: THREE.Vector3;
   currentFootPos: THREE.Vector3;
@@ -70,10 +72,12 @@ export class SpiderModel {
   private bodyShadowMesh!: THREE.Mesh;
   private spinneretMesh!: THREE.Mesh;
 
-  // 8 Articulated legs
+  // 8 Articulated legs with authentic alternating tetrapod gait
   public legs: LegDef[] = [];
-  private activeGaitGroup: 'A' | 'B' = 'A';
-  private gaitTimer: number = 0;
+  public gaitPhase: number = 0;
+  private prevGaitPhase: number = 0;
+  private initialized: boolean = false;
+  private lastBodyPos: THREE.Vector2 = new THREE.Vector2();
 
   // Materials
   private bodyMaterial!: THREE.MeshStandardMaterial;
@@ -371,21 +375,22 @@ export class SpiderModel {
    */
   private buildLegs() {
     // Authentic arachnid leg angles & proportional reach:
-    // Pair 1: Front reaching forward (~50 deg)
-    // Pair 2: Lateral-forward reaching wide (~80 deg)
-    // Pair 3: Lateral-rear reaching wide (~105 deg)
-    // Pair 4: Long rear legs extending back (~145 deg)
+    // Left legs (-X) and Right legs (+X) are perfectly mirrored.
+    // Alternating tetrapod gait groupings:
+    // Group A: L1 (0), R2 (5), L3 (2), R4 (7)
+    // Group B: R1 (4), L2 (1), R3 (6), L4 (3)
     const legSpecs = [
       // Left legs (0 to 3)
-      { isLeft: true, group: 'A' as const, angle: 0.92, reach: 56, hipY: 6, femur: 26, tibia: 28, tarsus: 18 },
-      { isLeft: true, group: 'B' as const, angle: 1.48, reach: 64, hipY: 2, femur: 30, tibia: 32, tarsus: 20 },
-      { isLeft: true, group: 'A' as const, angle: 1.95, reach: 62, hipY: -2, femur: 28, tibia: 30, tarsus: 20 },
-      { isLeft: true, group: 'B' as const, angle: 2.48, reach: 72, hipY: -6, femur: 34, tibia: 36, tarsus: 24 },
-      // Right legs (4 to 7)
-      { isLeft: false, group: 'B' as const, angle: -0.92, reach: 56, hipY: 6, femur: 26, tibia: 28, tarsus: 18 },
-      { isLeft: false, group: 'A' as const, angle: -1.48, reach: 64, hipY: 2, femur: 30, tibia: 32, tarsus: 20 },
-      { isLeft: false, group: 'B' as const, angle: -1.95, reach: 62, hipY: -2, femur: 28, tibia: 30, tarsus: 20 },
-      { isLeft: false, group: 'A' as const, angle: -2.48, reach: 72, hipY: -6, femur: 34, tibia: 36, tarsus: 24 },
+      { isLeft: true, group: 'A' as const, angle: 0.95, reach: 52, neutral: new THREE.Vector3(-28, 44, 0), hip: new THREE.Vector3(-7.0, 7.5, 4.0), femur: 28, tibia: 30, tarsus: 20 },
+      { isLeft: true, group: 'B' as const, angle: 1.52, reach: 60, neutral: new THREE.Vector3(-50, 20, 0), hip: new THREE.Vector3(-8.5, 3.0, 4.0), femur: 32, tibia: 34, tarsus: 22 },
+      { isLeft: true, group: 'A' as const, neutral: new THREE.Vector3(-48, -18, 0), angle: 2.05, reach: 58, hip: new THREE.Vector3(-8.5, -2.5, 4.0), femur: 32, tibia: 34, tarsus: 22 },
+      { isLeft: true, group: 'B' as const, neutral: new THREE.Vector3(-32, -46, 0), angle: 2.65, reach: 68, hip: new THREE.Vector3(-7.0, -7.5, 4.0), femur: 36, tibia: 38, tarsus: 26 },
+
+      // Right legs (4 to 7) - symmetrical mirror across X axis
+      { isLeft: false, group: 'B' as const, neutral: new THREE.Vector3(28, 44, 0), angle: -0.95, reach: 52, hip: new THREE.Vector3(7.0, 7.5, 4.0), femur: 28, tibia: 30, tarsus: 20 },
+      { isLeft: false, group: 'A' as const, neutral: new THREE.Vector3(50, 20, 0), angle: -1.52, reach: 60, hip: new THREE.Vector3(8.5, 3.0, 4.0), femur: 32, tibia: 34, tarsus: 22 },
+      { isLeft: false, group: 'B' as const, neutral: new THREE.Vector3(48, -18, 0), angle: -2.05, reach: 58, hip: new THREE.Vector3(8.5, -2.5, 4.0), femur: 32, tibia: 34, tarsus: 22 },
+      { isLeft: false, group: 'A' as const, neutral: new THREE.Vector3(32, -46, 0), angle: -2.65, reach: 68, hip: new THREE.Vector3(7.0, -7.5, 4.0), femur: 36, tibia: 38, tarsus: 26 },
     ];
 
     const kneeGeo = this.regGeo(new THREE.SphereGeometry(1.3, 8, 8));
@@ -393,8 +398,7 @@ export class SpiderModel {
     const footShadowGeo = this.regGeo(new THREE.CircleGeometry(2.8, 10));
 
     legSpecs.forEach((spec, idx) => {
-      const side = spec.isLeft ? -1 : 1;
-      const hipOffset = new THREE.Vector3(side * 8.5, spec.hipY, 4.0);
+      const hipOffset = spec.hip.clone();
 
       // Tapered segment cylinders:
       // Femur: thick at hip (1.4) tapering to knee (1.0)
@@ -419,12 +423,7 @@ export class SpiderModel {
       this.group.add(femurMesh, patellaKneeMesh, tibiaMesh, tarsusMesh, clawMesh);
       this.shadowGroup.add(femurShadowMesh, tibiaShadowMesh, footShadowMesh);
 
-      // Neutral resting foot location
-      const neutralPos = new THREE.Vector3(
-        Math.cos(spec.angle) * spec.reach,
-        Math.sin(spec.angle) * spec.reach,
-        0
-      );
+      const neutralPos = spec.neutral.clone();
 
       this.legs.push({
         index: idx,
@@ -433,11 +432,13 @@ export class SpiderModel {
         baseAngle: spec.angle,
         reach: spec.reach,
         hipOffset,
+        neutralOffset: spec.neutral.clone(),
         femurLen: spec.femur,
         tibiaLen: spec.tibia,
         tarsusLen: spec.tarsus,
         isStepping: false,
         stepProgress: 0,
+        worldFootPos: neutralPos.clone(),
         stepStartPos: neutralPos.clone(),
         stepTargetPos: neutralPos.clone(),
         currentFootPos: neutralPos.clone(),
@@ -524,7 +525,9 @@ export class SpiderModel {
   }
 
   /**
-   * Main per-frame update loop
+   * Main per-frame update loop with authentic arachnid crawling kinematics:
+   * Stance feet remain locked to ground coordinates (no sliding/gliding),
+   * while swing feet lift in parabolic vertical arcs and snap to predictive landing targets.
    */
   public update(
     delta: number,
@@ -541,94 +544,202 @@ export class SpiderModel {
     // Position spider in screen coordinates
     this.group.position.set(bodyX, bodyY, 0);
 
+    const cosH = Math.cos(headingAngle);
+    const sinH = Math.sin(headingAngle);
+
+    // First-frame initialization or major position teleport
+    if (!this.initialized) {
+      this.initialized = true;
+      this.lastBodyPos.set(bodyX, bodyY);
+      for (let i = 0; i < this.legs.length; i++) {
+        const leg = this.legs[i];
+        const nx = leg.neutralOffset.x * this.config.size;
+        const ny = leg.neutralOffset.y * this.config.size;
+        const rx = nx * cosH - ny * sinH;
+        const ry = nx * sinH + ny * cosH;
+        leg.worldFootPos.set(bodyX + rx, bodyY + ry, 0);
+        leg.stepStartPos.copy(leg.worldFootPos);
+        leg.stepTargetPos.copy(leg.worldFootPos);
+        leg.currentFootPos.set(rx, ry, 0);
+        leg.isStepping = false;
+        leg.stepProgress = 0;
+      }
+    }
+
+    // Teleport detection (e.g. window resize or rapid cursor hop)
+    const bodyDist = _v1.set(bodyX, bodyY, 0).distanceTo(_v2.set(this.lastBodyPos.x, this.lastBodyPos.y, 0));
+    if (bodyDist > 240 * this.config.size) {
+      for (let i = 0; i < this.legs.length; i++) {
+        const leg = this.legs[i];
+        const nx = leg.neutralOffset.x * this.config.size;
+        const ny = leg.neutralOffset.y * this.config.size;
+        const rx = nx * cosH - ny * sinH;
+        const ry = nx * sinH + ny * cosH;
+        leg.worldFootPos.set(bodyX + rx, bodyY + ry, 0);
+        leg.stepStartPos.copy(leg.worldFootPos);
+        leg.stepTargetPos.copy(leg.worldFootPos);
+        leg.isStepping = false;
+        leg.stepProgress = 0;
+      }
+    }
+    this.lastBodyPos.set(bodyX, bodyY);
+
     // Natural breathing in abdomen
     this.breathePhase += delta * 3.2;
     const breathe = 1.0 + Math.sin(this.breathePhase) * 0.05;
     this.abdomenMesh.scale.set(breathe, breathe, breathe);
 
     // Sensory palp twitching
-    this.palpTwitch += delta * (isMoving ? 12.0 : 4.0);
+    this.palpTwitch += delta * (isMoving ? 14.0 : 4.5);
     const pTwitch = Math.sin(this.palpTwitch) * 0.18;
     this.pedipalpLeft.rotation.z = pTwitch;
     this.pedipalpRight.rotation.z = -pTwitch;
 
-    // Body wiggle during scuttle
-    if (isMoving) {
-      this.bodyWiggle += delta * 18.0 * this.config.speed;
-      this.bodyGroup.rotation.z = headingAngle + Math.sin(this.bodyWiggle) * 0.06;
+    // Detect turning in place from foot drift
+    let maxFootDrift = 0;
+    for (let i = 0; i < this.legs.length; i++) {
+      const leg = this.legs[i];
+      const nx = leg.neutralOffset.x * this.config.size;
+      const ny = leg.neutralOffset.y * this.config.size;
+      const rx = nx * cosH - ny * sinH;
+      const ry = nx * sinH + ny * cosH;
+      _v1.set(bodyX + rx, bodyY + ry, 0);
+      const drift = leg.worldFootPos.distanceTo(_v1);
+      if (drift > maxFootDrift) maxFootDrift = drift;
+    }
+
+    const isTurningInPlace = !isMoving && maxFootDrift > 20.0 * this.config.size;
+    const isCrawling = isMoving || isTurningInPlace;
+
+    // Alternating Tetrapod Gait Cycle:
+    // Group A: L1 (0), R2 (5), L3 (2), R4 (7)
+    // Group B: R1 (4), L2 (1), R3 (6), L4 (3)
+    if (isCrawling) {
+      // Natural cadence: rapid staccato scuttle frequency
+      const cycleRate = (isMoving
+        ? Math.max(2.4, Math.min(speed / 24.0, 7.0))
+        : 3.5) * this.config.speed;
+
+      const prevPhase = this.gaitPhase;
+      this.gaitPhase = (this.gaitPhase + delta * cycleRate) % 1.0;
+
+      // Group transitions (Group A lands at 0.5, Group B lands at 0.0)
+      const crossedToB = prevPhase < 0.5 && this.gaitPhase >= 0.5;
+      const crossedToA = prevPhase > 0.5 && this.gaitPhase < 0.5;
+
+      if (crossedToB || crossedToA) {
+        if (this.onFootstep) {
+          this.onFootstep(speedRatio);
+        }
+      }
+    }
+
+    // Cephalothorax & Abdomen scuttling heave and sway
+    if (isCrawling) {
+      // Lateral roll/yaw sway synced to alternating gait groups
+      const sway = Math.sin(this.gaitPhase * Math.PI * 2) * 0.045;
+      this.bodyGroup.rotation.z = headingAngle + sway;
+
+      // Vertical heave (carapace bobs with every step push)
+      const heaveZ = Math.abs(Math.sin(this.gaitPhase * Math.PI * 2)) * (2.4 * this.config.size);
+      this.bodyGroup.position.z = heaveZ;
+
+      // Secondary Abdomen waggle (connected via pedicel waist, soft mass inertia)
+      const abdomenWaggle = Math.sin(this.gaitPhase * Math.PI * 2 - 0.4) * 0.07;
+      this.abdomenMesh.rotation.z = abdomenWaggle;
     } else {
       this.bodyGroup.rotation.z = headingAngle;
+      this.bodyGroup.position.z = 0;
+      this.abdomenMesh.rotation.z = 0;
     }
 
     // Shadow follows body rotation with a slight sunlight offset
-    this.bodyShadowMesh.rotation.z = headingAngle;
+    this.bodyShadowMesh.rotation.z = this.bodyGroup.rotation.z;
 
-    // Alternating gait step pacing
-    const stepDuration = Math.max(0.07, 0.2 / Math.max(0.5, this.config.speed * (isMoving ? speedRatio : 0.8)));
-    this.gaitTimer += delta;
+    // Active swinging group vs stance group
+    const activeGroup: 'A' | 'B' = this.gaitPhase < 0.5 ? 'A' : 'B';
+    const rawProgress = (this.gaitPhase % 0.5) / 0.5; // 0.0 to 1.0
 
-    let stepTriggered = false;
+    // Non-linear step swing curve: fast initial acceleration, high leg lift, sharp snap-down
+    const swingEase = rawProgress < 0.5
+      ? 4 * rawProgress * rawProgress * rawProgress
+      : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
 
     for (let i = 0; i < this.legs.length; i++) {
       const leg = this.legs[i];
+      const isSwingingGroup = isCrawling && leg.group === activeGroup;
 
-      // Desired foot landing position projected into world
-      const neutralAngle = headingAngle + leg.baseAngle;
-      _v1.set(
-        Math.cos(neutralAngle) * leg.reach,
-        Math.sin(neutralAngle) * leg.reach,
-        0
-      );
+      // Calculate ideal target landing point in world coordinates
+      const nx = leg.neutralOffset.x * this.config.size;
+      const ny = leg.neutralOffset.y * this.config.size;
+      const rx = nx * cosH - ny * sinH;
+      const ry = nx * sinH + ny * cosH;
+      const neutralWorldX = bodyX + rx;
+      const neutralWorldY = bodyY + ry;
 
-      // Predictive step placement ahead of movement
-      if (isMoving) {
-        const lead = Math.min(30, speed * 4.5 * this.config.speed);
-        _v1.x += (velocity.x / speed) * lead;
-        _v1.y += (velocity.y / speed) * lead;
+      // Predictive stride lead ahead of body travel direction
+      let targetX = neutralWorldX;
+      let targetY = neutralWorldY;
+
+      if (isMoving && speed > 1) {
+        const strideLead = Math.min(44.0 * this.config.size, Math.max(14.0 * this.config.size, speed * 0.17 * this.config.speed));
+        const dirX = velocity.x / speed;
+        const dirY = velocity.y / speed;
+        targetX += dirX * strideLead;
+        targetY += dirY * strideLead;
       }
 
-      leg.idealFootPos.copy(_v1);
+      leg.idealFootPos.set(neutralWorldX, neutralWorldY, 0);
 
-      const footDrift = leg.currentFootPos.distanceTo(leg.idealFootPos);
-      const stepDistThreshold = isMoving ? (16 * this.config.size) : (24 * this.config.size);
+      if (isSwingingGroup) {
+        if (!leg.isStepping) {
+          // Initiate swing: record launch origin and landing target
+          leg.isStepping = true;
+          leg.stepStartPos.copy(leg.worldFootPos);
+          leg.stepTargetPos.set(targetX, targetY, 0);
+        }
 
-      if (!leg.isStepping && leg.group === this.activeGaitGroup && (footDrift > stepDistThreshold || (isMoving && Math.random() < 0.06))) {
-        leg.isStepping = true;
-        leg.stepProgress = 0;
-        leg.stepStartPos.copy(leg.currentFootPos);
-        leg.stepTargetPos.copy(leg.idealFootPos).add(
-          _v2.set((Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3, 0)
-        );
-        stepTriggered = true;
-      }
+        leg.stepProgress = rawProgress;
 
-      if (leg.isStepping) {
-        leg.stepProgress += delta / stepDuration;
-        if (leg.stepProgress >= 1.0) {
-          leg.stepProgress = 1.0;
+        // Interpolate world position from stepStartPos to stepTargetPos
+        leg.worldFootPos.lerpVectors(leg.stepStartPos, leg.stepTargetPos, swingEase);
+
+        // Natural parabolic step lift in Z (vertical arc towards viewer)
+        // Leading feelers and rear pushers lift higher for dramatic silhouette
+        const liftPeak = (leg.index === 0 || leg.index === 4 || leg.index === 3 || leg.index === 7) ? 22.0 : 16.0;
+        const lift = Math.sin(rawProgress * Math.PI) * (liftPeak * this.config.size);
+        leg.worldFootPos.z = lift;
+
+      } else {
+        // STANCE PHASE: Firmly planted on the ground!
+        // World coordinates do NOT move with the body, locking foot to ground
+        if (leg.isStepping) {
           leg.isStepping = false;
-          leg.currentFootPos.copy(leg.stepTargetPos);
-          if (this.onFootstep) {
-            this.onFootstep(speedRatio);
-          }
+          leg.worldFootPos.copy(leg.stepTargetPos);
+          leg.worldFootPos.z = 0;
         } else {
-          const t = leg.stepProgress;
-          // Smooth step easing
-          const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-          leg.currentFootPos.lerpVectors(leg.stepStartPos, leg.stepTargetPos, ease);
+          leg.worldFootPos.z = 0;
+        }
 
-          // Step lift arc in Z
-          leg.currentFootPos.z = Math.sin(t * Math.PI) * (14.0 * this.config.size);
+        // Idle stance settling: smoothly return any overstretched feet to resting posture
+        if (!isCrawling) {
+          _v1.set(neutralWorldX, neutralWorldY, 0);
+          const stretch = leg.worldFootPos.distanceTo(_v1);
+          if (stretch > 18.0 * this.config.size) {
+            leg.worldFootPos.lerp(_v1, delta * 7.0);
+          }
         }
       }
 
+      // Convert World Foot Position to spider-local coordinates for Three.js rendering
+      leg.currentFootPos.set(
+        leg.worldFootPos.x - bodyX,
+        leg.worldFootPos.y - bodyY,
+        leg.worldFootPos.z
+      );
+
       // Solve Top-Down 3-Joint Arachnid Kinematics
       this.solveTopDownLegIK(leg);
-    }
-
-    if (this.gaitTimer > stepDuration * 0.95 && stepTriggered) {
-      this.activeGaitGroup = this.activeGaitGroup === 'A' ? 'B' : 'A';
-      this.gaitTimer = 0;
     }
 
     this.updateSilkDragline(bodyX, bodyY);
@@ -657,13 +768,18 @@ export class SpiderModel {
     // Upward knee arch vector in top-down view:
     // Spiders have knees that jut outwards and arch upwards:
     // In top-down view, knees are positioned outwards perpendicular to hip-foot axis
-    const midDir = _v2.set(_v1.x, _v1.y, 0).normalize();
+    const midDir = _v2.set(_v1.x, _v1.y, 0);
+    if (midDir.lengthSq() > 0.001) {
+      midDir.normalize();
+    } else {
+      midDir.set(leg.isLeft ? -1 : 1, 0, 0);
+    }
     const perpDir = _v3.set(-midDir.y, midDir.x, 0).multiplyScalar(leg.isLeft ? 1 : -1);
 
     // Knee apex calculation: outward knee flare (spiders legs bow outward widely!)
-    const kneeFlare = 16.0 * this.config.size;
-    const kneeForward = distClamped * 0.45;
-    const kneeZ = _hipWorld.z + 14.0 * this.config.size + (leg.currentFootPos.z * 0.5);
+    const kneeFlare = (18.0 + (leg.isStepping ? Math.sin(leg.stepProgress * Math.PI) * 6.0 : 0)) * this.config.size;
+    const kneeForward = distClamped * 0.44;
+    const kneeZ = _hipWorld.z + 14.0 * this.config.size + (leg.currentFootPos.z * 0.65);
 
     _kneePos.set(
       _hipWorld.x + midDir.x * kneeForward + perpDir.x * kneeFlare,
@@ -672,8 +788,8 @@ export class SpiderModel {
     );
 
     // Ankle position: between knee and foot
-    const ankleForward = distClamped * 0.78;
-    const ankleFlare = kneeFlare * 0.4;
+    const ankleForward = distClamped * 0.76;
+    const ankleFlare = kneeFlare * 0.42;
     const ankleZ = Math.max(0, leg.currentFootPos.z) + 4.0 * this.config.size;
 
     _anklePos.set(
