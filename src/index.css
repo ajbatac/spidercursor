@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Smooth transition when switching light/dark modes */
+html, body {
+  transition: background-color 0.25s ease, color 0.25s ease;
+  overflow-x: hidden;
+}
+
+/* Custom Spooky Halloween Keyframes */
+@keyframes mistSlow {
+  0% { transform: translateX(0) scaleY(1); }
+  50% { transform: translateX(-25%) scaleY(1.15); }
+  100% { transform: translateX(-50%) scaleY(1); }
+}
+
+@keyframes mistFast {
+  0% { transform: translateX(-50%) scaleY(1.1); }
+  50% { transform: translateX(-25%) scaleY(0.95); }
+  100% { transform: translateX(0) scaleY(1.1); }
+}
+
+@keyframes ghostFloatA {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-16px) rotate(4deg) translateX(8px); }
+  66% { transform: translateY(12px) rotate(-3deg) translateX(-6px); }
+}
+
+@keyframes ghostFloatB {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(-22px) rotate(-5deg) translateX(-10px); }
+  75% { transform: translateY(8px) rotate(3deg) translateX(6px); }
+}
+
+@keyframes batFly {
+  0% { transform: translate(-100px, 40px) scale(0.6); }
+  25% { transform: translate(25vw, -30px) scale(0.85); }
+  50% { transform: translate(55vw, 60px) scale(1); }
+  75% { transform: translate(85vw, -10px) scale(0.75); }
+  100% { transform: translate(110vw, 30px) scale(0.5); }
+}
+
+@keyframes batWingFlap {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.2); }
+}
+
+@keyframes webSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2.5deg) scale(1.02); }
+}
+
+@keyframes danglingSpiderBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(28px); }
+}
+
+@keyframes candleGlow {
+  0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.7)); }
+  25% { opacity: 0.65; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.45)); }
+  50% { opacity: 0.95; filter: drop-shadow(0 0 22px rgba(245, 158, 11, 0.85)); }
+  75% { opacity: 0.75; filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.55)); }
+}
+
+@keyframes skullJawChatter {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+  55% { transform: translateY(0); }
+  60% { transform: translateY(3px); }
+  65% { transform: translateY(0); }
+}
+
+.anim-mist-slow {
+  animation: mistSlow 28s linear infinite alternate;
+}
+
+.anim-mist-fast {
+  animation: mistFast 18s linear infinite alternate;
+}
+
+.anim-ghost-a {
+  animation: ghostFloatA 7s ease-in-out infinite;
+}
+
+.anim-ghost-b {
+  animation: ghostFloatB 8.5s ease-in-out infinite;
+}
+
+.anim-bat-fly-1 {
+  animation: batFly 14s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.anim-bat-fly-2 {
+  animation: batFly 19s cubic-bezier(0.4, 0, 0.2, 1) infinite 6s;
+}
+
+.anim-bat-wings {
+  animation: batWingFlap 0.22s ease-in-out infinite;
+}
+
+.anim-web-sway {
+  animation: webSway 9s ease-in-out infinite;
+  transform-origin: top left;
+}
+
+.anim-spider-dangle {
+  animation: danglingSpiderBob 4.2s ease-in-out infinite;
+}
+
+.anim-candle {
+  animation: candleGlow 3s ease-in-out infinite;
+}
+
+.anim-skull-chatter {
+  animation: skullJawChatter 5s ease-in-out infinite;
+}

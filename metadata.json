@@ -1,0 +1,6 @@
+{
+  "name": "SpiderCursor - Lightweight Three.js Procedural Spider",
+  "description": "Framework-agnostic, embeddable Three.js procedural spider with realistic inverse kinematics, cursor tracking, light/dark mode adaptation, and customizable configurations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
