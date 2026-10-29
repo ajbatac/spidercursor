@@ -53,7 +53,8 @@ export interface SpiderInstance {
   readonly config: SpiderConfig;
   updateConfig(newConfig: Partial<SpiderConfig>): void;
   scare(force?: number): void;
-  feed(x: number, y: number): void;
+  feed(x: number, y: number, onConsumed?: () => void): void;
+  clearBait?(): void;
   pounce(x: number, y: number): void;
   getPosition(): { x: number; y: number; angle: number };
   setTarget(x: number, y: number): void;

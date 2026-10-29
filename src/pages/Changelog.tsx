@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { ArrowLeft, Rss, Sparkles, CheckCircle2, Calendar, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowLeft, Rss, CheckCircle2, Calendar, ShieldCheck, Zap } from 'lucide-react';
 
 interface ChangelogProps {
   onBackToHome: () => void;

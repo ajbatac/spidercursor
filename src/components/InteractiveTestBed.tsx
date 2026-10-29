@@ -17,7 +17,7 @@ export const InteractiveTestBed: React.FC = () => {
   return (
     <section id="testbed" className="py-16 px-4 sm:px-6 max-w-5xl mx-auto relative z-10">
       <div className="text-center mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20 mb-3">
+        <div className="inline-flex items-center gap-2 px-[12px] py-1 rounded-[12px] text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20 mb-3">
           <MousePointer className="w-3.5 h-3.5" />
           <span>Interactive Click-Through Playground</span>
         </div>
@@ -31,7 +31,7 @@ export const InteractiveTestBed: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Interactive Form Card */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 rounded-[12px] px-[12px] py-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div>
             <h3 className="font-bold text-slate-950 dark:text-white text-base mb-1">
               Input and Typing Test
@@ -48,19 +48,19 @@ export const InteractiveTestBed: React.FC = () => {
                   placeholder="Type a spooky spell..."
                   value={sampleInput}
                   onChange={(e) => setSampleInput(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="w-full pl-9 pr-[12px] py-2 text-xs rounded-[12px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
 
               <div className="flex gap-2">
                 <button
                   onClick={() => setClickCount(c => c + 1)}
-                  className="flex-1 py-2 px-3 text-xs font-semibold bg-slate-950 hover:bg-slate-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="flex-1 py-2 px-[12px] text-xs font-semibold bg-slate-950 hover:bg-slate-800 dark:bg-amber-500 dark:hover:bg-amber-400 text-white dark:text-slate-950 rounded-[12px] transition-all active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Click Me</span>
                 </button>
-                <div className="px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-mono font-bold text-slate-700 dark:text-slate-300 flex items-center">
+                <div className="px-[12px] py-2 bg-slate-100 dark:bg-slate-800 rounded-[12px] text-xs font-mono font-bold text-slate-700 dark:text-slate-300 flex items-center">
                   Clicks: {clickCount}
                 </div>
               </div>
@@ -73,7 +73,7 @@ export const InteractiveTestBed: React.FC = () => {
         </div>
 
         {/* Fun Spooky Mood Toggle */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 rounded-[12px] px-[12px] py-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div>
             <h3 className="font-bold text-slate-950 dark:text-white text-base mb-1">
               Trick or Treat Selector
@@ -85,7 +85,7 @@ export const InteractiveTestBed: React.FC = () => {
             <div className="space-y-2">
               <label
                 onClick={() => setSpookyMode('prank')}
-                className={`flex items-center justify-between p-3 rounded-xl border text-xs cursor-pointer transition-colors ${
+                className={`flex items-center justify-between px-[12px] py-3 rounded-[12px] border text-xs cursor-pointer transition-colors ${
                   spookyMode === 'prank'
                     ? 'border-slate-950 dark:border-amber-500 bg-slate-100 dark:bg-slate-800 font-semibold'
                     : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
@@ -100,7 +100,7 @@ export const InteractiveTestBed: React.FC = () => {
 
               <label
                 onClick={() => setSpookyMode('treat')}
-                className={`flex items-center justify-between p-3 rounded-xl border text-xs cursor-pointer transition-colors ${
+                className={`flex items-center justify-between px-[12px] py-3 rounded-[12px] border text-xs cursor-pointer transition-colors ${
                   spookyMode === 'treat'
                     ? 'border-slate-950 dark:border-amber-500 bg-slate-100 dark:bg-slate-800 font-semibold'
                     : 'border-slate-200 dark:border-slate-800 hover:border-slate-300'
@@ -118,12 +118,12 @@ export const InteractiveTestBed: React.FC = () => {
           <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <button
               onClick={() => setIsLiked(!isLiked)}
-              className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-[12px] py-1 rounded-[12px] text-xs text-slate-600 dark:text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
             >
               <Heart className={`w-4 h-4 ${isLiked ? 'text-rose-500 fill-rose-500' : ''}`} />
               <span>{isLiked ? 'Loved!' : 'Like This'}</span>
             </button>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1 px-[12px]">
               <CheckCircle className="w-3.5 h-3.5" />
               <span>Free and Open</span>
             </span>
@@ -131,7 +131,7 @@ export const InteractiveTestBed: React.FC = () => {
         </div>
 
         {/* Text Selection Test */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 rounded-[12px] px-[12px] py-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between">
           <div>
             <h3 className="font-bold text-slate-950 dark:text-white text-base mb-1">
               Highlight and Select Text
@@ -140,7 +140,7 @@ export const InteractiveTestBed: React.FC = () => {
               Drag your mouse to highlight this text while the spider scuttles across:
             </p>
 
-            <blockquote className="p-3.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 italic border-l-4 border-amber-500 select-text">
+            <blockquote className="px-[12px] py-3.5 bg-slate-100 dark:bg-slate-800 rounded-[12px] text-xs text-slate-800 dark:text-slate-200 italic border-l-4 border-amber-500 select-text">
               "Add this spider to any HTML page with one line of code. It crawls toward the visitor's cursor, casts real shadows, and brings spooky fun to any site for free."
             </blockquote>
           </div>

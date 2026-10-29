@@ -87,6 +87,9 @@ export class SpiderCursor implements SpiderInstance {
   private fleeTimer: number = 0;
   private wanderTimer: number = 0;
   private isMouseActive: boolean = false;
+  private baitTarget: THREE.Vector2 | null = null;
+  private baitTimer: number = 0;
+  private onBaitConsumedCallback?: () => void;
 
   // Performance & Loop
   private animFrameId: number | null = null;
@@ -261,6 +264,12 @@ export class SpiderCursor implements SpiderInstance {
 
   private onPointerMove = (e: MouseEvent | TouchEvent) => {
     this.isMouseActive = true;
+
+    // If actively stalking pumpkin bait, don't let cursor movement divert the spider!
+    if (this.baitTarget && this.baitTimer > 0) {
+      return;
+    }
+
     let clientX = 0;
     let clientY = 0;
 
@@ -287,8 +296,10 @@ export class SpiderCursor implements SpiderInstance {
   };
 
   private onPointerDown = (e: MouseEvent) => {
-    // Left click: trigger interest or pounce toward location
-    this.feed(e.clientX, e.clientY);
+    // Left click pounces toward point if not actively stalking bait
+    if (!this.baitTarget || this.baitTimer <= 0) {
+      this.pounce(e.clientX, e.clientY);
+    }
   };
 
   private onWindowResize = () => {
@@ -376,6 +387,32 @@ export class SpiderCursor implements SpiderInstance {
       this.fleeTimer -= delta;
       if (this.fleeTimer <= 0) {
         this.isFleeing = false;
+      }
+    }
+
+    // Pumpkin bait stalking logic
+    if (this.baitTarget) {
+      this.baitTimer -= delta;
+      // Lock target position directly onto bait
+      this.targetPos.copy(this.baitTarget);
+
+      const toBait = new THREE.Vector2().subVectors(this.baitTarget, this.currentPos);
+      const distToBait = toBait.length();
+      const eatDistance = Math.max(38, 42 * this.config.size);
+
+      if (distToBait <= eatDistance) {
+        // Spider has caught and eaten the bait!
+        this.audioSynth.playCrunch();
+        if (this.onBaitConsumedCallback) {
+          const cb = this.onBaitConsumedCallback;
+          this.onBaitConsumedCallback = undefined;
+          cb();
+        }
+        this.baitTarget = null;
+        this.baitTimer = 0;
+        this.velocity.multiplyScalar(0.2);
+      } else if (this.baitTimer <= 0) {
+        this.baitTarget = null;
       }
     }
 
@@ -553,12 +590,22 @@ export class SpiderCursor implements SpiderInstance {
     }
   }
 
-  public feed(x: number, y: number) {
+  public feed(x: number, y: number, onConsumed?: () => void) {
+    this.baitTarget = new THREE.Vector2(x, y);
+    this.baitTimer = 10.0; // bait persists up to 10 seconds unless consumed earlier
     this.targetPos.set(x, y);
     this.isFleeing = false;
+    this.onBaitConsumedCallback = onConsumed;
+
     this.miniSpiders.forEach(m => {
       m.target.set(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 60);
     });
+  }
+
+  public clearBait() {
+    this.baitTarget = null;
+    this.baitTimer = 0;
+    this.onBaitConsumedCallback = undefined;
   }
 
   public pounce(x: number, y: number) {

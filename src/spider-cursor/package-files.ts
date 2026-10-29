@@ -58,7 +58,7 @@ export interface SpiderInstance {
   readonly config: SpiderConfig;
   updateConfig(newConfig: Partial<SpiderConfig>): void;
   scare(force?: number): void;
-  feed(x: number, y: number): void;
+  feed(x: number, y: number, onConsumed?: () => void): void;
   pounce(x: number, y: number): void;
   getPosition(): { x: number; y: number; angle: number };
   setTarget(x: number, y: number): void;
@@ -70,7 +70,7 @@ export declare class SpiderCursor implements SpiderInstance {
   constructor(config?: SpiderConfig);
   updateConfig(newConfig: Partial<SpiderConfig>): void;
   scare(force?: number): void;
-  feed(x: number, y: number): void;
+  feed(x: number, y: number, onConsumed?: () => void): void;
   pounce(x: number, y: number): void;
   getPosition(): { x: number; y: number; angle: number };
   setTarget(x: number, y: number): void;
@@ -84,7 +84,7 @@ export default SpiderCursor;
 
 export const PACKAGE_JSON_CONTENT = `{
   "name": "spider-cursor",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Lightweight, embeddable Three.js procedural spider with realistic inverse kinematics, cursor tracking, and seamless light/dark mode adaptation.",
   "main": "dist/spider-cursor.cjs.js",
   "module": "dist/spider-cursor.esm.js",

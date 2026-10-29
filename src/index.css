@@ -2,6 +2,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.font-instrument {
+  font-family: 'Instrument Sans', sans-serif;
+}
+
 /* Smooth transition when switching light/dark modes */
 html, body {
   transition: background-color 0.25s ease, color 0.25s ease;

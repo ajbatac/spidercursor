@@ -15,9 +15,11 @@ import { DownloadModal } from './components/DownloadModal';
 import { CemeteryParallax } from './components/CemeteryParallax';
 import { NotFound } from './components/NotFound';
 import { Changelog } from './pages/Changelog';
+import { PumpkinBaitOverlay, PumpkinBaitData } from './components/PumpkinBaitOverlay';
 
 export default function App() {
   const spiderRef = useRef<SpiderCursor | null>(null);
+  const [pumpkinBait, setPumpkinBait] = useState<PumpkinBaitData | null>(null);
   const [config, setConfig] = useState<SpiderConfig>({
     ...DEFAULT_CONFIG,
     size: 1.0,
@@ -114,11 +116,31 @@ export default function App() {
     spiderRef.current?.scare(1.4);
   };
 
-  const handleDropBait = () => {
-    // Drop bait at screen center or slightly offset
-    const x = window.innerWidth * (0.35 + Math.random() * 0.3);
-    const y = window.innerHeight * (0.35 + Math.random() * 0.3);
-    spiderRef.current?.feed(x, y);
+  const handleDropBait = (customX?: number, customY?: number) => {
+    // If coordinates specified, use them; otherwise, drop into clear, visible upper-middle viewport
+    const x = typeof customX === 'number' ? customX : window.innerWidth * (0.32 + Math.random() * 0.36);
+    const y = typeof customY === 'number' ? customY : Math.max(160, window.innerHeight * (0.28 + Math.random() * 0.34));
+
+    const baitId = Date.now();
+    setPumpkinBait({
+      id: baitId,
+      x,
+      y,
+      eaten: false,
+    });
+
+    spiderRef.current?.feed(x, y, () => {
+      // Spider caught the pumpkin bait!
+      setPumpkinBait((prev) => (prev && prev.id === baitId ? { ...prev, eaten: true } : prev));
+      setTimeout(() => {
+        setPumpkinBait((prev) => (prev && prev.id === baitId ? null : prev));
+      }, 1200);
+    });
+  };
+
+  const handleClearBait = () => {
+    setPumpkinBait(null);
+    spiderRef.current?.clearBait?.();
   };
 
   const handleRecenter = () => {
@@ -200,7 +222,7 @@ export default function App() {
         {/* Footer */}
         <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 py-8 text-center text-xs text-slate-500 dark:text-slate-400">
           <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <span className="font-bold text-slate-800 dark:text-slate-200">SpiderCursor</span>
               <span>•</span>
               <a
@@ -215,12 +237,29 @@ export default function App() {
                 v0.1.1
               </a>
               <span>•</span>
-              <span>High-performance Three.js procedural animation</span>
+              <span>
+                Made by{' '}
+                <a
+                  href="https://ajbatac.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-slate-800 dark:text-slate-200 hover:text-amber-500 dark:hover:text-amber-400 underline decoration-amber-500/40"
+                >
+                  AJ Batac
+                </a>
+              </span>
             </div>
-            <div className="flex items-center gap-4">
-              <span>Zero external assets</span>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <a
+                href="https://github.com/ajbatac/spidercursor"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-amber-500 transition-colors underline decoration-amber-500/40 flex items-center gap-1 font-medium"
+              >
+                <span>GitHub Repo</span>
+              </a>
               <span>•</span>
-              <span>Framework agnostic</span>
+              <span>Zero assets</span>
               <span>•</span>
               <a
                 href="/changelog"
@@ -244,11 +283,14 @@ export default function App() {
                 404 Spider Den 🕸️
               </a>
               <span>•</span>
-              <span>Apache-2.0 License</span>
+              <span>Apache-2.0</span>
             </div>
           </div>
         </footer>
       </main>
+
+      {/* Visible Animated Pumpkin Bait Overlay */}
+      <PumpkinBaitOverlay bait={pumpkinBait} onClearBait={handleClearBait} />
 
       {/* Ergonomic Collapsible Bottom Dock (Zero Viewport Occlusion) */}
       <PlaygroundDock

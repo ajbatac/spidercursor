@@ -99,6 +99,38 @@ export class SpiderAudioSynthesizer {
     }
   }
 
+  public playCrunch() {
+    if (!this.enabled) return;
+    try {
+      if (!this.ctx) {
+        const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        this.ctx = new AudioContextClass();
+      }
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
+      const t = this.ctx.currentTime;
+      for (let i = 0; i < 3; i++) {
+        const offset = i * 0.045;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(550 + Math.random() * 300, t + offset);
+        osc.frequency.exponentialRampToValueAtTime(110, t + offset + 0.04);
+
+        gain.gain.setValueAtTime(0.08, t + offset);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.045);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t + offset);
+        osc.stop(t + offset + 0.05);
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   public dispose() {
     if (this.ctx) {
       this.ctx.close().catch(() => {});

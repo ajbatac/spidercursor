@@ -42,6 +42,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
 }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState<'kinematics' | 'theme' | 'behavior'>('kinematics');
+  const [baitActive, setBaitActive] = useState(false);
 
   const themePresets = [
     { id: 'light' as SpiderThemeMode, label: 'Light Mode', desc: 'Charcoal chitin on light surfaces' },
@@ -64,7 +65,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
       <div className="flex justify-center -mb-[1px]">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex items-center gap-1.5 px-3.5 py-1 text-xs font-semibold rounded-t-lg bg-slate-950 text-amber-400 border-t border-x border-slate-800 shadow-md backdrop-blur-md cursor-pointer hover:bg-slate-900 transition-colors"
+          className="flex items-center gap-1.5 px-[12px] py-1 text-xs font-semibold rounded-t-[12px] bg-slate-950 text-amber-400 border-t border-x border-slate-800 shadow-md backdrop-blur-md cursor-pointer hover:bg-slate-900 transition-colors"
         >
           {isCollapsed ? (
             <>
@@ -81,14 +82,14 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
       </div>
 
       {/* Main Glassmorphic Dock Container */}
-      <div className="bg-white/95 dark:bg-slate-950/95 text-slate-900 dark:text-slate-100 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl p-4 sm:p-5">
+      <div className="bg-white/95 dark:bg-slate-950/95 text-slate-900 dark:text-slate-100 rounded-[12px] border border-slate-200 dark:border-slate-800 shadow-2xl backdrop-blur-xl px-[12px] py-4 sm:py-5">
         {/* Top Dock Bar: Tabs and Quick Action Triggers */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
           {/* Category Tabs */}
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-[12px]">
             <button
               onClick={() => setActiveTab('kinematics')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-[12px] py-1.5 text-xs font-semibold rounded-[12px] transition-all ${
                 activeTab === 'kinematics'
                   ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-amber-400 shadow-sm'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -100,7 +101,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
 
             <button
               onClick={() => setActiveTab('theme')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-[12px] py-1.5 text-xs font-semibold rounded-[12px] transition-all ${
                 activeTab === 'theme'
                   ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-amber-400 shadow-sm'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -112,7 +113,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
 
             <button
               onClick={() => setActiveTab('behavior')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-[12px] py-1.5 text-xs font-semibold rounded-[12px] transition-all ${
                 activeTab === 'behavior'
                   ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-amber-400 shadow-sm'
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -127,7 +128,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={onScare}
-              className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-100 dark:hover:bg-rose-900/40 rounded-lg transition-colors active:scale-95"
+              className="flex items-center gap-1 px-[12px] py-1.5 text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-900/50 hover:bg-rose-100 dark:hover:bg-rose-900/40 rounded-[12px] transition-colors active:scale-95"
               title="Scare the spider backwards"
             >
               <Zap className="w-3.5 h-3.5 text-rose-500" />
@@ -135,16 +136,25 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
             </button>
 
             <button
-              onClick={onDropBait}
-              className="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded-lg transition-colors active:scale-95"
-              title="Drop virtual bait to summon the spider"
+              onClick={() => {
+                setBaitActive(true);
+                setTimeout(() => setBaitActive(false), 2400);
+                onDropBait();
+              }}
+              className={`flex items-center gap-1.5 px-[12px] py-1.5 text-xs font-semibold rounded-[12px] border transition-all active:scale-95 cursor-pointer ${
+                baitActive
+                  ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/20 scale-105'
+                  : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-900/50 hover:bg-amber-100 dark:hover:bg-amber-900/40'
+              }`}
+              title="Drop delicious pumpkin bait to summon the spider"
             >
-              <span>🎃 Pumpkin Bait</span>
+              <span>🎃</span>
+              <span>{baitActive ? 'Bait Dropped!' : 'Pumpkin Bait'}</span>
             </button>
 
             <button
               onClick={onRecenter}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg transition-colors cursor-pointer"
+              className="flex items-center gap-1 px-[12px] py-1.5 text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-[12px] transition-colors cursor-pointer"
               title="Center in viewport"
             >
               <Crosshair className="w-3.5 h-3.5" />
@@ -153,7 +163,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
             {/* Audio Toggle */}
             <button
               onClick={() => onUpdateConfig({ sound: !config.sound })}
-              className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors cursor-pointer ${
+              className={`flex items-center gap-1 px-[12px] py-1.5 text-xs font-semibold rounded-[12px] border transition-colors cursor-pointer ${
                 config.sound
                   ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
@@ -245,7 +255,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={() => onUpdateConfig({ webSilk: !config.webSilk })}
-                  className={`flex-1 flex items-center justify-between p-2 rounded-xl border text-xs font-medium transition-colors ${
+                  className={`flex-1 flex items-center justify-between px-[12px] py-2 rounded-[12px] border text-xs font-medium transition-colors ${
                     config.webSilk
                       ? 'bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white'
                       : 'bg-transparent border-slate-200 dark:border-slate-800 text-slate-400'
@@ -254,14 +264,14 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                   <span className="flex items-center gap-1.5">
                     <span>Cobweb Silk</span>
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-[12px] bg-slate-200 dark:bg-slate-800 font-mono">
                     {config.webSilk ? 'ON' : 'OFF'}
                   </span>
                 </button>
 
                 <button
                   onClick={() => onUpdateConfig({ pointerEventsNone: !config.pointerEventsNone })}
-                  className={`flex-1 flex items-center justify-between p-2 rounded-xl border text-xs font-medium transition-colors ${
+                  className={`flex-1 flex items-center justify-between px-[12px] py-2 rounded-[12px] border text-xs font-medium transition-colors ${
                     config.pointerEventsNone
                       ? 'bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white'
                       : 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200'
@@ -272,7 +282,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                     <MousePointer2 className="w-3.5 h-3.5" />
                     <span>Pass-thru</span>
                   </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 font-mono">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-[12px] bg-slate-200 dark:bg-slate-800 font-mono">
                     {config.pointerEventsNone ? 'YES' : 'NO'}
                   </span>
                 </button>
@@ -287,7 +297,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                   <button
                     key={t.id}
                     onClick={() => onUpdateConfig({ theme: t.id })}
-                    className={`flex flex-col text-left p-2.5 rounded-xl border transition-all ${
+                    className={`flex flex-col text-left px-[12px] py-2.5 rounded-[12px] border transition-all ${
                       config.theme === t.id
                         ? 'border-slate-950 dark:border-amber-500 bg-slate-100 dark:bg-slate-900 shadow-sm'
                         : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
@@ -317,7 +327,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                       },
                     })
                   }
-                  className="px-2.5 py-1 text-xs rounded-lg border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 font-medium hover:bg-rose-100"
+                  className="px-[12px] py-1 text-xs rounded-[12px] border border-rose-300 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 font-medium hover:bg-rose-100"
                 >
                   Black Widow
                 </button>
@@ -336,7 +346,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                       },
                     })
                   }
-                  className="px-2.5 py-1 text-xs rounded-lg border border-amber-300 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 font-medium hover:bg-amber-100"
+                  className="px-[12px] py-1 text-xs rounded-[12px] border border-amber-300 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 font-medium hover:bg-amber-100"
                 >
                   Pumpkin Spider
                 </button>
@@ -355,7 +365,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                       },
                     })
                   }
-                  className="px-2.5 py-1 text-xs rounded-lg border border-emerald-300 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 font-medium hover:bg-emerald-100"
+                  className="px-[12px] py-1 text-xs rounded-[12px] border border-emerald-300 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 font-medium hover:bg-emerald-100"
                 >
                   Venom Forest
                 </button>
@@ -374,7 +384,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                       },
                     })
                   }
-                  className="px-2.5 py-1 text-xs rounded-lg border border-sky-300 dark:border-sky-900 bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-300 font-medium hover:bg-sky-100"
+                  className="px-[12px] py-1 text-xs rounded-[12px] border border-sky-300 dark:border-sky-900 bg-sky-50 dark:bg-sky-950/30 text-sky-700 dark:text-sky-300 font-medium hover:bg-sky-100"
                 >
                   Ghost Steel
                 </button>
@@ -393,7 +403,7 @@ export const PlaygroundDock: React.FC<PlaygroundDockProps> = ({
                 <button
                   key={m.id}
                   onClick={() => onUpdateConfig({ mode: m.id })}
-                  className={`p-2.5 rounded-xl border text-left transition-all ${
+                  className={`px-[12px] py-2.5 rounded-[12px] border text-left transition-all ${
                     config.mode === m.id
                       ? 'border-slate-950 dark:border-amber-500 bg-slate-100 dark:bg-slate-900 shadow-sm'
                       : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
